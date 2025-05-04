@@ -210,7 +210,7 @@ public:
     }
 
     bool makeMove(int row, int col, char player) {
-        if (board[row][col] == ' ') {
+        if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == ' ') {
             board[row][col] = player;
             return true;
         }
@@ -293,7 +293,7 @@ public:
         int bestVal = -1000;
         int bestRow = -1, bestCol = -1;
 
-        if (difficulty == 1) { // Easy: random
+        if (difficulty == 1) { // Легкий: случайный ход
             vector<pair<int, int>> moves;
             for (int i = 0; i < 3; ++i)
                 for (int j = 0; j < 3; ++j)
@@ -306,22 +306,43 @@ public:
             }
         }
 
-        else if (difficulty == 2) { // Medium: block or random
-            for (int i = 0; i < 3; ++i)
-                for (int j = 0; j < 3; ++j)
+        else if (difficulty == 2) { // Средний: блокировать или делать случайный ход
+            bool moveMade = false;
+
+            // Попытка заблокировать игрока, если он может выиграть следующим ходом
+            for (int i = 0; i < 3 && !moveMade; ++i) {
+                for (int j = 0; j < 3 && !moveMade; ++j) {
                     if (board[i][j] == ' ') {
+                        // Проверяем, если поставим здесь игрока, проиграет ли он
                         board[i][j] = PLAYER;
                         if (checkWinner() == PLAYER) {
+                            // Тогда делаем ход компьютером сюда
                             board[i][j] = COMPUTER;
-                            return;
+                            moveMade = true;
+                            break;
                         }
+                        // Возвращаем назад
                         board[i][j] = ' ';
                     }
+                }
+            }
 
-            computerMove(); // fallback to random
+            if (!moveMade) {
+                // Если не удалось блокировать, выбираем случайный ход
+                vector<pair<int, int>> freeMoves;
+                for (int i = 0; i < 3; ++i)
+                    for (int j = 0; j < 3; ++j)
+                        if (board[i][j] == ' ')
+                            freeMoves.push_back({i, j});
+                if (!freeMoves.empty()) {
+                    srand(time(0));
+                    auto move = freeMoves[rand() % freeMoves.size()];
+                    makeMove(move.first, move.second, COMPUTER);
+                }
+            }
         }
 
-        else if (difficulty == 3) { // Hard: Minimax
+        else if (difficulty == 3) { // Сложный: minimax
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                     if (board[i][j] == ' ') {
