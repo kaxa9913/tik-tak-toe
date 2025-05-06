@@ -1,21 +1,21 @@
 
-#include <iostream>
-#include <vector>
-#include <limits>
-#include <cstdlib>
-#include <ctime>
+    #include <iostream>
+    #include <vector>
+    #include <limits>
+    #include <cstdlib>
+    #include <ctime>
 
-using namespace std;
+    using namespace std;
 
-const char PLAYER = 'X'; // Символ игрока
-const char COMPUTER = 'O'; // Символ компьютера
-int difficulty = 1; // Уровень сложности
+    const char PLAYER = 'X'; // Символ игрока
+    const char COMPUTER = 'O'; // Символ компьютера
+    int difficulty = 1; // Уровень сложности
 
-class Game {
-private:
+    class Game {
+    private:
     vector<vector<char>> board; // Игровое поле
 
-public:
+    public:
     // Конструктор: инициализация пустого поля
     Game() {
         board = vector<vector<char>>(3, vector<char>(3, ' '));
@@ -234,9 +234,9 @@ public:
             }
         }
     }
-};
+    };
 
-int main() {
+    int main() {
     cout << "=== КРЕСТИКИ-НОЛИКИ ===\n";
     cout << "Выберите уровень сложности:\n";
     cout << "1 - Лёгкий\n2 - Средний\n3 - Сложный\n";
@@ -246,4 +246,4 @@ int main() {
     game.start();
 
     return 0;
-}
+    }
